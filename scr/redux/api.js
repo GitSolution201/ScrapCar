@@ -1,8 +1,8 @@
 import axios from 'axios';
-
+// https://scrape4you.onrender.com/auth/register
 // Set up the base Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // Replace this with your actual API base URL
+  baseURL: 'https://scrape4you.onrender.com', // Replace this with your actual API base URL
   timeout: 10000, // Timeout in milliseconds
   headers: {
     'Content-Type': 'application/json',
@@ -10,23 +10,28 @@ const api = axios.create({
 });
 
 // Login API
-export const login = async credentials => {
-  try {
-    // const response = await api.post('/login', credentials);
-    // return response.data;
-  } catch (error) {
-    throw error.response?.data || 'Login failed';
+export const login = async userData => {
+  const response = await api.post('/auth/login', userData);
+  if (response.data?.message == 'Login successful') {
+    return response.data;
   }
 };
 
 // Register API
 export const register = async userData => {
-  try {
-    // const response = await api.post('/register', userData);
-    // return response.data;
-  } catch (error) {
-    throw error.response?.data || 'Register failed';
+  const response = await api.post('/auth/register', userData);
+  if (response.data?.message == 'Registration Successful') {
+    return response.data;
   }
 };
-
+// get All Car Listing
+export const getUser = async token => {
+  const response = await api.get('/car/get-all-listing', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  return response?.data;
+};
 export default api;
